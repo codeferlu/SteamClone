@@ -13,7 +13,7 @@ const Register = () => {
       await axios.post('/api/auth/register', { username, password });
       navigate('/login');
     } catch (error) {
-      console.error(error);
+      console.error('Error registering:', error);
     }
   };
 

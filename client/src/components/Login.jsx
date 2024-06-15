@@ -14,7 +14,7 @@ const Login = () => {
       localStorage.setItem('token', response.data.token);
       navigate('/');
     } catch (error) {
-      console.error(error);
+      console.error('Error logging in:', error);
     }
   };
 

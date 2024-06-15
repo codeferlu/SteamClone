@@ -7,8 +7,12 @@ const GameList = () => {
 
   useEffect(() => {
     const fetchGames = async () => {
-      const response = await axios.get('/api/games');
-      setGames(response.data);
+      try {
+        const response = await axios.get('/api/games');
+        setGames(response.data);
+      } catch (error) {
+        console.error('Error fetching games:', error);
+      }
     };
 
     fetchGames();
