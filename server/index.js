@@ -7,13 +7,13 @@ const gameRoutes = require('./routes/games'); // Importa las rutas de los juegos
 dotenv.config();
 
 const app = express();
-const port = process.env.PORT || 5000;
+const port = process.env.PORT || 3001;
 
 app.use(cors());
 app.use(morgan('dev'));
 app.use(express.json());
 
-// Define las rutas para los juegos
+// Monta las rutas de los juegos en /api/games
 app.use('/api/games', gameRoutes);
 
 app.listen(port, () => {

@@ -1,26 +1,34 @@
 const pool = require('../config/database');
 
-const getGames = async (req, res) => {
-  try {
-    const result = await pool.query('SELECT * FROM games');
-    res.json(result.rows);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-};
-
-const getGameById = async (req, res) => {
-  try {
-    const result = await pool.query('SELECT * FROM games WHERE id = $1', [req.params.id]);
-    const game = result.rows[0];
-    if (!game) {
-      return res.status(404).json({ error: 'Game not found' });
+const getAllGames = async (req, res) => {
+    try {
+      const client = await pool.connect();
+      const result = await client.query('SELECT * FROM games');
+      client.release();
+      res.json(result.rows);
+    } catch (error) {
+      console.error('Error getting games:', error);
+      res.status(500).json({ message: 'Internal Server Error' });
     }
-    res.json(game);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-};
+  };
+
+  const getGameById = async (req, res) => {
+    const gameId = req.params.id;
+    try {
+      const client = await pool.connect();
+      const result = await client.query('SELECT * FROM games WHERE id = $1', [gameId]);
+      client.release();
+      if (result.rows.length > 0) {
+        res.json(result.rows[0]);
+      } else {
+        res.status(404).json({ message: 'Game not found' });
+      }
+    } catch (error) {
+      console.error(`Error getting game with ID ${gameId}:`, error);
+      res.status(500).json({ message: 'Internal Server Error' });
+    }
+  };
+  
 
 const createGame = async (req, res) => {
   const { title, description, price, imageUrl } = req.body;
@@ -66,4 +74,4 @@ const deleteGame = async (req, res) => {
   }
 };
 
-module.exports = { getGames, getGameById, createGame, updateGame, deleteGame };
+module.exports = { getAllGames, getGameById, createGame, updateGame, deleteGame };
