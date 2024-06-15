@@ -1,24 +1,21 @@
 const express = require('express');
 const cors = require('cors');
 const morgan = require('morgan');
-require('dotenv').config();
+const dotenv = require('dotenv');
+const gameRoutes = require('./routes/games'); // Importa las rutas de los juegos
+
+dotenv.config();
 
 const app = express();
+const port = process.env.PORT || 5000;
 
 app.use(cors());
-app.use(express.json());
 app.use(morgan('dev'));
+app.use(express.json());
 
-// Importar rutas
-const authRoutes = require('./routes/auth');
-const gameRoutes = require('./routes/games');
-
-// Usar rutas
-app.use('/api/auth', authRoutes);
+// Define las rutas para los juegos
 app.use('/api/games', gameRoutes);
 
-const PORT = process.env.PORT || 5000;
-
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+app.listen(port, () => {
+  console.log(`Server running on port ${port}`);
 });
