@@ -1,34 +1,33 @@
 const pool = require('../config/database');
 
 const getAllGames = async (req, res) => {
-    try {
-      const client = await pool.connect();
-      const result = await client.query('SELECT * FROM games');
-      client.release();
-      res.json(result.rows);
-    } catch (error) {
-      console.error('Error getting games:', error);
-      res.status(500).json({ message: 'Internal Server Error' });
-    }
-  };
+  try {
+    const client = await pool.connect();
+    const result = await client.query('SELECT * FROM games');
+    client.release();
+    res.json(result.rows);
+  } catch (error) {
+    console.error('Error getting games:', error);
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
+};
 
-  const getGameById = async (req, res) => {
-    const gameId = req.params.id;
-    try {
-      const client = await pool.connect();
-      const result = await client.query('SELECT * FROM games WHERE id = $1', [gameId]);
-      client.release();
-      if (result.rows.length > 0) {
-        res.json(result.rows[0]);
-      } else {
-        res.status(404).json({ message: 'Game not found' });
-      }
-    } catch (error) {
-      console.error(`Error getting game with ID ${gameId}:`, error);
-      res.status(500).json({ message: 'Internal Server Error' });
+const getGameById = async (req, res) => {
+  const gameId = req.params.id;
+  try {
+    const client = await pool.connect();
+    const result = await client.query('SELECT * FROM games WHERE id = $1', [gameId]);
+    client.release();
+    if (result.rows.length > 0) {
+      res.json(result.rows[0]);
+    } else {
+      res.status(404).json({ message: 'Game not found' });
     }
-  };
-  
+  } catch (error) {
+    console.error(`Error getting game with ID ${gameId}:`, error);
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
+};
 
 const createGame = async (req, res) => {
   const { title, description, price, imageUrl } = req.body;
