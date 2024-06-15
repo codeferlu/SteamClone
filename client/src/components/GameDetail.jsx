@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { useParams, Link } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 
 const GameDetail = () => {
   const { id } = useParams();
@@ -8,12 +8,8 @@ const GameDetail = () => {
 
   useEffect(() => {
     const fetchGame = async () => {
-      try {
-        const response = await axios.get(`/api/games/${id}`);
-        setGame(response.data);
-      } catch (error) {
-        console.error('Error fetching game:', error);
-      }
+      const response = await axios.get(`/api/games/${id}`);
+      setGame(response.data);
     };
 
     fetchGame();
@@ -30,7 +26,6 @@ const GameDetail = () => {
       <p>{game.description}</p>
       <p>Price: ${game.price}</p>
       <button className="btn btn-primary">Add to Cart</button>
-      <Link to="/games" className="btn btn-secondary ml-2">Back to Games</Link>
     </div>
   );
 };
